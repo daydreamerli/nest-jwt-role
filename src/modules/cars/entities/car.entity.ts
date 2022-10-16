@@ -17,6 +17,12 @@ export class Car {
   @Column()
   dailyPrice: number;
 
+  @Column({ nullable: true, default: false })
+  discount: boolean;
+
+  @Column({ nullable: true })
+  discountValue: number;
+
   @Column()
   monthlyPrice: number;
 

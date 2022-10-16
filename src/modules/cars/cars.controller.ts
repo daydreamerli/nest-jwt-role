@@ -32,6 +32,17 @@ export class CarsController {
     return this.carsService.findAll();
   }
 
+  @Get('discount')
+  findDiscount() {
+    return this.carsService.findDiscountOnes();
+  }
+
+
+  @Get('hatchback')
+  findHatchBack() {
+    return this.carsService.findHatchBack();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.carsService.findOne(+id);
