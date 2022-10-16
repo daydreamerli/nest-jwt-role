@@ -13,24 +13,35 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  public async create(createUserDto: CreateUserDto) {
+  public async create(createUserDto: CreateUserDto): Promise<Partial<User>> {
     const email = createUserDto.email;
     const existingUser = await this.userRepository.findOne({
       where: { email },
     });
     if (existingUser) {
-      return existingUser;
+      return {
+        id: existingUser.id,
+        name: existingUser.name,
+        email: existingUser.email,
+        role: existingUser.role,
+      };
     }
     const bcryptPassword = await bcrypt
       .hash(createUserDto.password, 10)
       .then((r: any) => r);
-    const user = this.userRepository.create({
+    const newUser = this.userRepository.create({
       name: createUserDto.name,
       email: createUserDto.email,
       password: bcryptPassword,
       role: createUserDto.role,
     });
-    return await this.userRepository.save(user);
+    await this.userRepository.save(newUser);
+    return {
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role,
+    };
   }
 
   public async findByUserEmail(email: string) {
